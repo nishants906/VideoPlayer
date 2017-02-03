@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     Cursor cursor;
     int count;
     private List<String> songs = new ArrayList<>();
+    private List<String> location = new ArrayList<>();
 
 
     @Override
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView list = (RecyclerView) findViewById(R.id.mulist);
 
 
-        MusicAdapter madapter = new MusicAdapter(getApplicationContext(),songs);
+        MusicAdapter madapter = new MusicAdapter(getApplicationContext(),songs,location);
         list.setAdapter(madapter);
 
         LinearLayoutManager lm = new LinearLayoutManager(getApplicationContext());
@@ -57,6 +57,12 @@ public class MainActivity extends AppCompatActivity {
             int column_index = cursor.getColumnIndex(MediaStore.Video.Media.DISPLAY_NAME);
             cursor.moveToPosition(i);
             songs.add(cursor.getString(column_index));
+        }
+        for (int i =0;i<count ;i++)
+        {
+            cursor.moveToPosition(i);
+            int column_index = cursor.getColumnIndex(MediaStore.Video.Media.DATA);
+            location.add(cursor.getString(column_index));
         }
 
     }

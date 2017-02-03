@@ -19,17 +19,19 @@ import java.util.List;
     public int Type_Text = 1;
     Context r_context;
 
-    ArrayList<String> song;
-    ArrayList<String> checklist;
+    ArrayList<String> song=null;
+    ArrayList<String> checklist=null;
+    ArrayList<String> location=null;
 
 
 
 
 
-    public MusicAdapter(Context context, List<String> songs) {
+    public MusicAdapter(Context context, List<String> songs, List<String> location) {
         r_context = context;
         song = new ArrayList<>(songs);
         checklist=new ArrayList<String>();
+        this.location = new ArrayList<>(location);
         Log.d("songs", String.valueOf(songs));
     }
 
@@ -56,7 +58,12 @@ import java.util.List;
 
         holder.list.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Uri uri=new Uri(song.get())
+                Uri uri=Uri.parse(location.get(position));
+                MovieList mv=new MovieList(uri);
+                Log.d("confirm",location.get(position));
+                Log.d("confirm",song.get(position));
+
+
             }
 
         });
