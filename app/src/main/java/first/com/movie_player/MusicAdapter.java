@@ -1,6 +1,7 @@
 package first.com.movie_player;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,7 +18,7 @@ import java.util.List;
  */public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> {
 
     public int Type_Text = 1;
-    Context r_context;
+    Context context;
 
     ArrayList<String> song=null;
     ArrayList<String> checklist=null;
@@ -28,7 +29,7 @@ import java.util.List;
 
 
     public MusicAdapter(Context context, List<String> songs, List<String> location) {
-        r_context = context;
+        this.context = context;
         song = new ArrayList<>(songs);
         checklist=new ArrayList<String>();
         this.location = new ArrayList<>(location);
@@ -59,12 +60,12 @@ import java.util.List;
         holder.list.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Uri uri=Uri.parse(location.get(position));
-                MovieList mv=new MovieList(uri);
                 Log.d("confirm",location.get(position));
                 Log.d("confirm",song.get(position));
+                Intent intent=new Intent(context,MovieList.class);
+                context.startActivity(intent);
 
-
-            }
+                }
 
         });
 
