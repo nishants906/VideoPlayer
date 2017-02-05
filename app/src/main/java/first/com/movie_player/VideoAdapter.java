@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * Created by Test on 2/3/2017.
- */public class VideoAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> {
+ */public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> {
 
     public int Type_Text = 1;
     Context context;
@@ -60,6 +60,7 @@ import java.util.List;
         holder.list.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
+               db.resetTable_Records();
                 db.new_note(song.get(position),location.get(position));
                 Log.d("confirm",location.get(position));
                 Log.d("confirm",song.get(position));
