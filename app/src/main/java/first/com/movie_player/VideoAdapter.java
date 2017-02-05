@@ -2,7 +2,6 @@ package first.com.movie_player;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,23 +14,24 @@ import java.util.List;
 
 /**
  * Created by Test on 2/3/2017.
- */public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> {
+ */public class VideoAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> {
 
     public int Type_Text = 1;
     Context context;
 
     ArrayList<String> song=null;
-    ArrayList<String> checklist=null;
+    DBHandler db;
+
+    public VideoAdapter() {
+    }
+
     ArrayList<String> location=null;
 
-
-
-
-
-    public MusicAdapter(Context context, List<String> songs, List<String> location) {
+    public VideoAdapter(Context context, List<String> songs, List<String> location) {
         this.context = context;
         song = new ArrayList<>(songs);
-        checklist=new ArrayList<String>();
+        db=new DBHandler(context);
+
         this.location = new ArrayList<>(location);
         Log.d("songs", String.valueOf(songs));
     }
@@ -56,10 +56,11 @@ import java.util.List;
         if (holder.HolderId == 1) {
             holder.list.setText(song.get(position));
         }
-
+        db.resetTable_Records();
         holder.list.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Uri uri=Uri.parse(location.get(position));
+
+                db.new_note(song.get(position),location.get(position));
                 Log.d("confirm",location.get(position));
                 Log.d("confirm",song.get(position));
                 Intent intent=new Intent(context,MovieList.class);

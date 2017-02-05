@@ -1,6 +1,5 @@
 package first.com.movie_player;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -17,13 +16,19 @@ public class MainActivity extends AppCompatActivity {
     int count;
     private List<String> songs = new ArrayList<>();
     private List<String> location = new ArrayList<>();
+    DBHandler db;
 
+    public MainActivity() {
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        db=new DBHandler(getApplicationContext());
+        db.resetTable_Records();
         init_phone_video_grid();
         initList();
 
@@ -34,12 +39,14 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView list = (RecyclerView) findViewById(R.id.mulist);
 
 
-        MusicAdapter madapter = new MusicAdapter(getApplicationContext(),songs,location);
-        list.setAdapter(madapter);
+        VideoAdapter madapter = new VideoAdapter(getApplicationContext(),songs,location);
+
 
         LinearLayoutManager lm = new LinearLayoutManager(getApplicationContext());
+        list.setAdapter(madapter);
         list.setLayoutManager(lm);
         list.setItemAnimator(new DefaultItemAnimator());
+        madapter.notifyDataSetChanged();
 
     }
 
