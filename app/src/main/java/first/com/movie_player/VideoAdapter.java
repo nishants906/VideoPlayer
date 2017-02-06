@@ -65,6 +65,7 @@ import java.util.List;
                 Log.d("confirm",location.get(position));
                 Log.d("confirm",song.get(position));
                 Intent intent=new Intent(context,MovieList.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
 
                 }

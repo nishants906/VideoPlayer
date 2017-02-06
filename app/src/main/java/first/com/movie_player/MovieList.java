@@ -4,16 +4,17 @@ import android.content.Context;
 import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import com.swipper.library.Swipper;
+
 import java.util.List;
 
-public class MovieList extends AppCompatActivity {
+public class MovieList extends Swipper {
 
     Uri uri;
     VideoView videov;
@@ -41,6 +42,8 @@ public class MovieList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_list);
 
+        set(this);
+
         db=new DBHandler(getApplicationContext());
         location=db.access_data();
 
@@ -48,20 +51,24 @@ public class MovieList extends AppCompatActivity {
         mc=new MediaController(this);
         uri=uri.parse(location.get(i));
         Log.d("upro123", String.valueOf(uri));
-        play= (Button) findViewById(R.id.play);
         videov= (VideoView) findViewById(R.id.video);
-        i++;
         videov.setVideoURI(uri);
-        play.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                play.setVisibility(View.GONE);
+
+                DisplayMetrics metrics = new DisplayMetrics(); getWindowManager().getDefaultDisplay().getMetrics(metrics);
+                android.widget.RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) videov.getLayoutParams();
+                params.width =  metrics.widthPixels;
+                params.height = metrics.heightPixels;
+                params.leftMargin = 0;
+                videov.setLayoutParams(params);
+
+                Brightness(Orientation.VERTICAL);
+                Volume(Orientation.CIRCULAR);
+                Seek(Orientation.HORIZONTAL,videov);
+
+
                 videov.setMediaController(mc);
                 mc.setAnchorView(videov);
                 videov.start();
-
-            }
-        });
 
     }
 }
