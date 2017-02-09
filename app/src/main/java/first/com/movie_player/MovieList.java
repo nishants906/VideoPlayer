@@ -2,11 +2,14 @@ package first.com.movie_player;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -14,17 +17,18 @@ import com.swipper.library.Swipper;
 
 import java.util.List;
 
-public class MovieList extends Swipper {
+public class MovieList extends Swipper implements SensorEventListener{
 
     Uri uri;
     VideoView videov;
-    Button play;
     Context context;
-    String loc;
     DBHandler db;
     List<String> location=null;
     MediaController mc;
     int i=0;
+
+    private SensorManager mSensorManager;
+    private Sensor mProximity;
 
     public MovieList() {
 
@@ -43,6 +47,9 @@ public class MovieList extends Swipper {
         setContentView(R.layout.activity_movie_list);
 
         set(this);
+
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 
         db=new DBHandler(getApplicationContext());
         location=db.access_data();
@@ -69,6 +76,38 @@ public class MovieList extends Swipper {
                 videov.setMediaController(mc);
                 mc.setAnchorView(videov);
                 videov.start();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mSensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
+            if ( event.values[0]<= 3.0) {
+                //near
+                videov.pause();
+            } else {
+                //far
+                videov.start();
+            }
+            Log.d("mismatch", String.valueOf(event.values[0]));
+
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
 }

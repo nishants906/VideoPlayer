@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
         LinearLayoutManager lm = new LinearLayoutManager(getApplicationContext());
         list.setAdapter(madapter);
         list.setLayoutManager(lm);
-
         list.setItemAnimator(new DefaultItemAnimator());
         madapter.notifyDataSetChanged();
 

@@ -2,12 +2,17 @@ package first.com.movie_player;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
+import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,9 +60,11 @@ import java.util.List;
 
         if (holder.HolderId == 1) {
             holder.list.setText(song.get(position));
+            Bitmap bMap = ThumbnailUtils.createVideoThumbnail(location.get(position), MediaStore.Video.Thumbnails.MICRO_KIND);
+            holder.imv.setImageBitmap(bMap);
         }
         db.resetTable_Records();
-        holder.list.setOnClickListener(new View.OnClickListener() {
+        holder.view.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
                db.resetTable_Records();
@@ -90,10 +97,14 @@ import java.util.List;
     public class ViewHolder extends RecyclerView.ViewHolder {
         int HolderId;
         Button list;
+        ImageView imv;
+        LinearLayout view;
         public ViewHolder(final View itemView, int View_Type, final Context context) {
             super(itemView);
             if (View_Type == Type_Text) {
                 list = (Button) itemView.findViewById(R.id.list);
+                imv= (ImageView) itemView.findViewById(R.id.image);
+                view= (LinearLayout) itemView.findViewById(R.id.view);
                 //Text = (TextView) itemView.findViewById(R.id.type1_text);
                 HolderId = 1;
             }//If
