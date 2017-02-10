@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    android:background="#ffda75"
+    android:background="#c9c3c2"
     tools:context="first.com.movie_player.MainActivity">
 
     <android.support.v7.widget.RecyclerView
