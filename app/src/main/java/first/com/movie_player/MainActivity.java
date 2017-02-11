@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     private List<String> songs = new ArrayList<>();
     private List<String> location = new ArrayList<>();
     DBHandler db;
+    private GridLayoutManager lLayout;
 
     public MainActivity() {
 
@@ -35,21 +36,22 @@ public class MainActivity extends AppCompatActivity {
         init_phone_video_grid();
         initList();
 
+
     }
 
 
 
     private void initList() {
-        RecyclerView list = (RecyclerView) findViewById(R.id.mulist);
 
+        lLayout = new GridLayoutManager(MainActivity.this,2);
+
+        RecyclerView list = (RecyclerView) findViewById(R.id.mulist);
 
         VideoAdapter madapter = new VideoAdapter(getApplicationContext(),songs,location);
 
+        list.setLayoutManager(lLayout);
 
-
-        LinearLayoutManager lm = new LinearLayoutManager(getApplicationContext());
         list.setAdapter(madapter);
-        list.setLayoutManager(lm);
         list.setItemAnimator(new DefaultItemAnimator());
         madapter.notifyDataSetChanged();
 

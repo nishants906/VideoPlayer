@@ -61,21 +61,18 @@ public class MovieList extends Swipper implements SensorEventListener{
         videov= (VideoView) findViewById(R.id.video);
         videov.setVideoURI(uri);
 
-                DisplayMetrics metrics = new DisplayMetrics(); getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                android.widget.RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) videov.getLayoutParams();
-                params.width =  metrics.widthPixels;
-                params.height = metrics.heightPixels;
-                params.leftMargin = 0;
-                videov.setLayoutParams(params);
-
-                Brightness(Orientation.VERTICAL);
-                Volume(Orientation.CIRCULAR);
-                Seek(Orientation.HORIZONTAL,videov);
-
-
-                videov.setMediaController(mc);
-                mc.setAnchorView(videov);
-                videov.start();
+        DisplayMetrics metrics = new DisplayMetrics(); getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        android.widget.RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) videov.getLayoutParams();
+        params.width =  metrics.widthPixels;
+        params.height = metrics.heightPixels;
+        params.leftMargin = 0;
+        videov.setLayoutParams(params);
+        Brightness(Orientation.VERTICAL);
+        Volume(Orientation.CIRCULAR);
+        Seek(Orientation.HORIZONTAL,videov);
+        videov.setMediaController(mc);
+        mc.setAnchorView(videov);
+        videov.start();
 
     }
 
@@ -83,13 +80,14 @@ public class MovieList extends Swipper implements SensorEventListener{
     protected void onResume() {
         super.onResume();
         mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mSensorManager.unregisterListener(this);
-    }
+        }
 
     @Override
     public void onSensorChanged(SensorEvent event) {

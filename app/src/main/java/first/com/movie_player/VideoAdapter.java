@@ -60,14 +60,12 @@ import java.util.List;
 
         if (holder.HolderId == 1) {
             holder.list.setText(song.get(position));
-            Bitmap bMap = ThumbnailUtils.createVideoThumbnail(location.get(position), MediaStore.Video.Thumbnails.MICRO_KIND);
-            holder.imv.setImageBitmap(bMap);
-        }
+            }
         db.resetTable_Records();
         holder.view.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-               db.resetTable_Records();
+                db.resetTable_Records();
                 db.new_note(song.get(position),location.get(position));
                 Log.d("confirm",location.get(position));
                 Log.d("confirm",song.get(position));
@@ -75,7 +73,7 @@ import java.util.List;
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
 
-                }
+            }
 
         });
 
@@ -113,4 +111,3 @@ import java.util.List;
     }//ViewHolder Class
 
 }
-
