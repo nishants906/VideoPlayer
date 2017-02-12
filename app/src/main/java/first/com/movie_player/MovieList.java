@@ -79,6 +79,7 @@ public class MovieList extends Swipper implements SensorEventListener{
     @Override
     protected void onResume() {
         super.onResume();
+        videov.seekTo(Integer.parseInt(db.access_position().get(db.access_position().size()-1)));
         mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
 
     }
@@ -86,6 +87,8 @@ public class MovieList extends Swipper implements SensorEventListener{
     @Override
     protected void onPause() {
         super.onPause();
+        db.add_data((videov.getCurrentPosition()));
+        Log.d("confirm", String.valueOf(videov.getCurrentPosition()));
         mSensorManager.unregisterListener(this);
         }
 

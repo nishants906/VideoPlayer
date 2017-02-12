@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
         db=new DBHandler(getApplicationContext());
         db.resetTable_Records();
+        db.add_data(0);
 
         init_phone_video_grid();
         initList();
@@ -56,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
         madapter.notifyDataSetChanged();
 
     }
-
 
     private void init_phone_video_grid() {
 

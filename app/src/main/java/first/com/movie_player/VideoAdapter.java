@@ -2,9 +2,6 @@ package first.com.movie_player;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
-import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,7 +58,6 @@ import java.util.List;
         if (holder.HolderId == 1) {
             holder.list.setText(song.get(position));
             }
-        db.resetTable_Records();
         holder.view.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
