@@ -11,12 +11,79 @@
     <VideoView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
         android:id="@+id/video"
         />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/ll"
+        android:layout_alignParentBottom="true">
+
+        <com.github.rubensousa.previewseekbar.PreviewSeekBarLayout
+            android:id="@+id/previewSeekBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/previewFrameLayout"
+                android:layout_width="100dp"
+                android:layout_height="100dp">
+
+                <View
+                    android:id="@+id/videoView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:background="@color/colorPrimary" />
+
+            </FrameLayout>
+
+            <com.github.rubensousa.previewseekbar.PreviewSeekBar
+                android:id="@+id/seek"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/previewFrameLayout"
+                android:layout_marginTop="25dp"
+                android:max="800" />
+
+        </com.github.rubensousa.previewseekbar.PreviewSeekBarLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@mipmap/ic_launcher"
+                android:id="@+id/back"/>
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:background="@mipmap/ic_launcher"
+                android:visibility="gone"
+                android:id="@+id/play"/>
+
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:background="@mipmap/ic_launcher"
+                android:id="@+id/pause"/>
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true"
+                android:background="@mipmap/ic_launcher"
+                android:id="@+id/forward"/>
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
 
 </RelativeLayout>
 

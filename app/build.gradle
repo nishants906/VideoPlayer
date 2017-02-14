@@ -31,6 +31,7 @@ dependencies {
     compile 'com.swipper.library:library:0.1.1'
     compile 'tyrantgit:explosionfield:1.0.1'
     compile 'com.github.rubensousa:previewseekbar:0.3'
+    compile 'com.minimize.library:seekbar-compat:0.2.5'
 
 
 }
