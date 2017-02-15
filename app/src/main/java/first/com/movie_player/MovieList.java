@@ -6,23 +6,18 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.SeekBar;
+import android.widget.MediaController;
 import android.widget.VideoView;
 
-import com.github.rubensousa.previewseekbar.PreviewSeekBar;
 import com.swipper.library.Swipper;
 
 import java.util.List;
 
-public class MovieList extends Swipper implements SensorEventListener, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+public class MovieList extends Swipper implements SensorEventListener{
 
     Uri uri;
     VideoView videov;
@@ -30,13 +25,7 @@ public class MovieList extends Swipper implements SensorEventListener, View.OnCl
     DBHandler db;
     List<String> location=null;
     int i=0;
-
-    PreviewSeekBar seekBar;
-    Button play;
-    Button pause;
-    Button forward;
-    Button back;
-    LinearLayout ll;
+    MediaController mc;
 
 
     private SensorManager mSensorManager;
@@ -57,32 +46,8 @@ public class MovieList extends Swipper implements SensorEventListener, View.OnCl
 
         set(this);
 
-        ll= (LinearLayout) findViewById(R.id.ll);
         videov= (VideoView) findViewById(R.id.video);
-        seekBar= (PreviewSeekBar) findViewById(R.id.seek);
-        play= (Button) findViewById(R.id.play);
-        pause= (Button) findViewById(R.id.pause);
-        back= (Button) findViewById(R.id.back);
-        forward= (Button) findViewById(R.id.forward);
-
-        videov.setOnClickListener(this);
-        play.setOnClickListener(this);
-        pause.setOnClickListener(this);
-        back.setOnClickListener(this);
-        forward.setOnClickListener(this);
-
-        videov.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-
-                seekBar.setMax(videov.getDuration());
-                seekBar.postDelayed(onEverySecond, 1000);
-            }
-        });
-        seekBar.addOnSeekBarChangeListener(this);
-
-
-
+        mc=new MediaController(this);
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 
@@ -104,6 +69,9 @@ public class MovieList extends Swipper implements SensorEventListener, View.OnCl
         Brightness(Orientation.VERTICAL);
         Volume(Orientation.CIRCULAR);
         Seek(Orientation.HORIZONTAL,videov);
+        videov.setMediaController(mc);
+        mc.setAnchorView(videov);
+
         videov.start();
 
     }
@@ -144,61 +112,4 @@ public class MovieList extends Swipper implements SensorEventListener, View.OnCl
 
     }
 
-    @Override
-    public void onClick(View v) {
-
-        switch (v.getId()){
-            case R.id.play:{
-                videov.start();
-                play.setVisibility(View.GONE);
-                pause.setVisibility(View.VISIBLE);
-                break;
-            }
-            case R.id.pause:{
-                videov.pause();
-                pause.setVisibility(View.GONE);
-                play.setVisibility(View.VISIBLE);
-                break;
-            }
-            case R.id.video:{
-                ll.setVisibility(View.VISIBLE);
-            }
-        }
-    }
-
-    private Runnable onEverySecond=new Runnable() {
-
-        @Override
-        public void run() {
-
-            if(seekBar != null) {
-                seekBar.setProgress(videov.getCurrentPosition());
-            }
-
-            if(videov.isPlaying()) {
-                seekBar.postDelayed(onEverySecond, 1000);
-            }
-
-        }
-    };
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-        if(fromUser) {
-            // this is when actually seekbar has been seeked to a new position
-            videov.seekTo(progress);
-        }
-
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
-    }
 }
