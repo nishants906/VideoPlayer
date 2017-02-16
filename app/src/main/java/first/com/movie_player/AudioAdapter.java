@@ -15,8 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Test on 2/3/2017.
- */public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> {
+ * Created by Test on 2/16/2017.
+ */
+public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.ViewHolder> {
 
     public int Type_Text = 1;
     Context context;
@@ -24,12 +25,12 @@ import java.util.List;
     ArrayList<String> song=null;
     DBHandler db;
 
-    public VideoAdapter() {
+    public AudioAdapter() {
     }
 
     ArrayList<String> location=null;
 
-    public VideoAdapter(Context context, List<String> songs, List<String> location) {
+    public AudioAdapter(Context context, List<String> songs, List<String> location) {
         this.context = context;
         song = new ArrayList<>(songs);
         db=new DBHandler(context);
@@ -57,7 +58,7 @@ import java.util.List;
 
         if (holder.HolderId == 1) {
             holder.list.setText(song.get(position));
-            }
+        }
         holder.view.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 

@@ -1,115 +1,130 @@
 package first.com.movie_player;
 
-import android.content.Context;
-import android.graphics.PixelFormat;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.net.Uri;
+import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
+import android.provider.MediaStore;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.MediaController;
-import android.widget.VideoView;
+import android.view.View;
+import android.widget.Button;
 
-import com.swipper.library.Swipper;
+import com.mxn.soul.flowingdrawer_core.ElasticDrawer;
+import com.mxn.soul.flowingdrawer_core.FlowingDrawer;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class MovieList extends Swipper implements SensorEventListener{
-
-    Uri uri;
-    VideoView videov;
-    Context context;
+public class MovieList extends AppCompatActivity implements View.OnClickListener {
+    Cursor cursor;
+    int count;
+    private List<String> videos = new ArrayList<>();
+    private List<String> location = new ArrayList<>();
     DBHandler db;
-    List<String> location=null;
-    int i=0;
-    MediaController mc;
-
-
-    private SensorManager mSensorManager;
-    private Sensor mProximity;
+    private GridLayoutManager lLayout;
+    FlowingDrawer mDrawer;
+    Button video,audio;
 
     public MovieList() {
 
     }
 
-    public MovieList(Context context) {
-        this.context = context;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movie_list);
+        setContentView(R.layout.activity_movielist);
+        mDrawer = (FlowingDrawer) findViewById(R.id.drawerlayout);
+        mDrawer.setTouchMode(ElasticDrawer.TOUCH_MODE_BEZEL);
+        mDrawer.setOnDrawerStateChangeListener(new ElasticDrawer.OnDrawerStateChangeListener() {
+            @Override
+            public void onDrawerStateChange(int oldState, int newState) {
+                if (newState == ElasticDrawer.STATE_CLOSED) {
+                    Log.i("MovieList", "Drawer STATE_CLOSED");
+                }
+            }
 
-        set(this);
+            @Override
+            public void onDrawerSlide(float openRatio, int offsetPixels) {
+                Log.i("MovieList", "openRatio=" + openRatio + " ,offsetPixels=" + offsetPixels);
+            }
+        });
 
-        videov= (VideoView) findViewById(R.id.video);
-        mc=new MediaController(this);
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+
+        video= (Button) findViewById(R.id.video);
+        audio= (Button) findViewById(R.id.audio);
+
+        video.setOnClickListener(this);
+        audio.setOnClickListener(this);
 
         db=new DBHandler(getApplicationContext());
-        location=db.access_data();
-
-        getWindow().setFormat(PixelFormat.UNKNOWN);
-        uri=uri.parse(location.get(i));
-        Log.d("upro123", String.valueOf(uri));
-        videov.setVideoURI(uri);
+        db.resetTable_Records();
+        db.add_data(0);
 
 
-        DisplayMetrics metrics = new DisplayMetrics(); getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        android.widget.RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) videov.getLayoutParams();
-        params.width =  metrics.widthPixels;
-        params.height = metrics.heightPixels;
-        params.leftMargin = 0;
-        videov.setLayoutParams(params);
-        Brightness(Orientation.VERTICAL);
-        Volume(Orientation.CIRCULAR);
-        Seek(Orientation.HORIZONTAL,videov);
-        videov.setMediaController(mc);
-        mc.setAnchorView(videov);
+        init_phone_video_grid();
+        initList();
 
-        videov.start();
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        videov.seekTo(0);
-        mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
+
+
+    private void initList() {
+
+        lLayout = new GridLayoutManager(MovieList.this,2);
+
+        RecyclerView list = (RecyclerView) findViewById(R.id.mulist);
+
+        VideoAdapter madapter = new VideoAdapter(getApplicationContext(),videos,location);
+
+        list.setLayoutManager(lLayout);
+
+        list.setAdapter(madapter);
+        list.setItemAnimator(new DefaultItemAnimator());
+        madapter.notifyDataSetChanged();
 
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        db.add_data((videov.getCurrentPosition()));
-        Log.d("confirm", String.valueOf(videov.getCurrentPosition()));
-        mSensorManager.unregisterListener(this);
+    private void init_phone_video_grid() {
+
+        String[] proj = { MediaStore.Video.Media._ID,
+                MediaStore.Video.Media.DATA,
+                MediaStore.Video.Media.DISPLAY_NAME,
+                MediaStore.Video.Media.SIZE };
+        cursor = managedQuery(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                proj, null, null, null);
+        count = cursor.getCount();
+        for (int i =0;i<count ;i++)
+        {
+            int column_index = cursor.getColumnIndex(MediaStore.Video.Media.DISPLAY_NAME);
+            cursor.moveToPosition(i);
+            videos.add(cursor.getString(column_index));
+        }
+        for (int i =0;i<count ;i++)
+        {
+            cursor.moveToPosition(i);
+            int column_index = cursor.getColumnIndex(MediaStore.Video.Media.DATA);
+            location.add(cursor.getString(column_index));
         }
 
+    }
+
     @Override
-    public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
-            if ( event.values[0]<= 3.0) {
-                //near
-                videov.pause();
-            } else {
-                //far
-                videov.start();
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.video:{
+                Intent intent=new Intent(MovieList.this,MovieList.class);
+                startActivity(intent);
+
             }
-            Log.d("mismatch", String.valueOf(event.values[0]));
+            case R.id.audio:{
+                Intent intent=new Intent(MovieList.this,Audiolist.class);
+                startActivity(intent);
+            }
 
         }
     }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
-
 }

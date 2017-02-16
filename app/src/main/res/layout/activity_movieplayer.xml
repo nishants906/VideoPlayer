@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="first.com.movie_player.MovieList">
+    tools:context="first.com.movie_player.MoviePlayer">
 
 
     <VideoView
