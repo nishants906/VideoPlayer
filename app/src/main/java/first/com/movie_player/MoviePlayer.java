@@ -53,6 +53,7 @@ public class MoviePlayer extends Swipper implements SensorEventListener{
 
         db=new DBHandler(getApplicationContext());
         location=db.access_data();
+        Log.d("location123", String.valueOf(location));
 
         getWindow().setFormat(PixelFormat.UNKNOWN);
         uri=uri.parse(location.get(i));

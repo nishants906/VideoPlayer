@@ -18,12 +18,19 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String DB_NAME = "DATABASE";
 
 
-    private static final String TABLE_RECORD = "RECORD";
+    private static final String TABLE_RECORD = "VIDEO_RECORD";
     private static final String TABLE_DATA = "DATA";
+
+
+    private static final String TABLE__AUDIO_RECORD = "Audio_RECORD";
+    private static final String TABLE_AUDIO_DATA = "Audo_DATA";
 
 
     private static final String KEY_NAME = "Name";
     private static final String KEY_lOCATION = "Location";
+
+    private static final String KEY_AUDIO_NAME = "AudioName";
+    private static final String KEY_AUDIO_lOCATION = "Location";
 
     private static final String KEY_POSITION = "Position";
 
@@ -40,10 +47,23 @@ public class DBHandler extends SQLiteOpenHelper {
 
         db.execSQL(CREATE_NOTES_TABLE);
 
+
+        String CREATE_AUDIO_TABLE = "Create Table " + TABLE__AUDIO_RECORD + "("
+                + KEY_AUDIO_NAME + " Text,"
+                + KEY_AUDIO_lOCATION + " Text " + ")";
+
+        db.execSQL(CREATE_AUDIO_TABLE);
+
         String CREATE_DATA_TABLE = "Create Table " + TABLE_DATA + "("
                 + KEY_POSITION + " Text " + ")";
 
         db.execSQL(CREATE_DATA_TABLE);
+
+
+        String CREATE_AUDIO_DATA_TABLE = "Create Table " + TABLE_AUDIO_DATA + "("
+                + KEY_POSITION + " Text " + ")";
+
+        db.execSQL(CREATE_AUDIO_DATA_TABLE);
 
        }
 
@@ -54,6 +74,14 @@ public class DBHandler extends SQLiteOpenHelper {
         onCreate(db);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DATA);
         onCreate(db);
+
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE__AUDIO_RECORD);
+        onCreate(db);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_AUDIO_DATA);
+        onCreate(db);
+
+
+
     }
 
     public void new_note(String Name, String loacation ) {
@@ -67,12 +95,36 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
+    public void new_audio_note(String Name, String loacation ) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_AUDIO_NAME, Name);
+        values.put(KEY_AUDIO_lOCATION, loacation);
+        Log.d("audio_note",Name);
+        db.insert(TABLE__AUDIO_RECORD, null, values);
+        Log.d("query", String.valueOf(TABLE_AUDIO_DATA));
+
+    }
+
+
+
     public void add_data(int position){
         SQLiteDatabase db =this.getWritableDatabase();
         ContentValues values=new ContentValues();
         values.put(KEY_POSITION, position);
 
         db.insert(TABLE_DATA, null, values);
+
+    }
+
+
+
+    public void add_audio_data(int position){
+        SQLiteDatabase db =this.getWritableDatabase();
+        ContentValues values=new ContentValues();
+        values.put(KEY_POSITION, position);
+
+        db.insert(TABLE_AUDIO_DATA, null, values);
 
     }
 
@@ -89,6 +141,30 @@ public class DBHandler extends SQLiteOpenHelper {
 
             } while(cursor.moveToNext());
 
+        }
+        cursor.close();
+        Log.d("note123", String.valueOf(pos_note));
+        return pos_note;
+
+    }
+
+
+
+    public List<String> access_audio_data(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<String> pos_note=new ArrayList<>();
+        String query = "SELECT * FROM " + TABLE__AUDIO_RECORD;
+
+        Cursor cursor = db.rawQuery(query, null);
+        cursor.moveToFirst();
+        if(cursor.getCount() > 0) {
+            do {
+
+                pos_note.add(cursor.getString(1));
+
+            } while(cursor.moveToNext());
+
+            Log.d("accesaudio", String.valueOf(pos_note));
         }
         cursor.close();
         Log.d("note123", String.valueOf(pos_note));
@@ -126,6 +202,9 @@ public class DBHandler extends SQLiteOpenHelper {
 
         db.delete(TABLE_RECORD, null, null);
         db.delete(TABLE_DATA, null, null);
+
+        db.delete(TABLE__AUDIO_RECORD, null, null);
+        db.delete(TABLE_AUDIO_DATA, null, null);
 
     }
 

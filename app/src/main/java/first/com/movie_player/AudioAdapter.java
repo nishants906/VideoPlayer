@@ -63,10 +63,10 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.ViewHolder> 
             public void onClick(View v) {
 
                 db.resetTable_Records();
-                db.new_note(song.get(position),location.get(position));
-                Log.d("confirm",location.get(position));
-                Log.d("confirm",song.get(position));
-                Intent intent=new Intent(context,MoviePlayer.class);
+                db.new_audio_note(song.get(position),location.get(position));
+                Log.d("confirm1234",location.get(position));
+                Log.d("confirm1234",song.get(position));
+                Intent intent=new Intent(context,AudioPlayer.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
 

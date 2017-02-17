@@ -36,6 +36,11 @@ public class Audiolist extends AppCompatActivity implements View.OnClickListener
         audio = (Button) findViewById(R.id.audio);
         video = (Button) findViewById(R.id.video);
 
+        db=new DBHandler(getApplicationContext());
+        db.resetTable_Records();
+
+
+
         audio.setOnClickListener(this);
         video.setOnClickListener(this);
         init_phone_audio_grid();
