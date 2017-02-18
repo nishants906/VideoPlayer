@@ -1,20 +1,21 @@
 package first.com.movie_player;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Audiolist extends AppCompatActivity implements View.OnClickListener {
+
+public class Audio extends Fragment {
 
 
     int count;
@@ -22,40 +23,48 @@ public class Audiolist extends AppCompatActivity implements View.OnClickListener
     private GridLayoutManager lLayout;
     private Cursor cursor;
 
+    RecyclerView list;
     private List<String> songs = new ArrayList<>();
     private List<String> location = new ArrayList<>();
 
-    Button audio, video;
+
+    public Audio() {
+        // Required empty public constructor
+    }
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_audiolist);
 
 
-        audio = (Button) findViewById(R.id.audio);
-        video = (Button) findViewById(R.id.video);
+    }
 
-        db=new DBHandler(getApplicationContext());
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View rootview= inflater.inflate(R.layout.fragment_audio, container, false);
+
+
+        list = (RecyclerView) rootview.findViewById(R.id.mulist);
+
+        db=new DBHandler(getContext());
         db.resetTable_Records();
 
-
-
-        audio.setOnClickListener(this);
-        video.setOnClickListener(this);
         init_phone_audio_grid();
         initList();
 
+        return rootview;
 
     }
 
     private void initList() {
 
-        lLayout = new GridLayoutManager(Audiolist.this, 2);
+        lLayout = new GridLayoutManager(getActivity(), 2);
 
-        RecyclerView list = (RecyclerView) findViewById(R.id.mulist);
 
-        AudioAdapter madapter = new AudioAdapter(getApplicationContext(), songs, location);
+        AudioAdapter madapter = new AudioAdapter(getActivity(), songs, location);
 
         list.setLayoutManager(lLayout);
 
@@ -73,7 +82,7 @@ public class Audiolist extends AppCompatActivity implements View.OnClickListener
                 MediaStore.Audio.Media.DATA,
                 MediaStore.Audio.Media.DISPLAY_NAME,
                 MediaStore.Audio.Media.SIZE};
-        cursor = managedQuery(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+        cursor = getActivity().managedQuery(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 proj, null, null, null);
         count = cursor.getCount();
         for (int i = 0; i < count; i++) {
@@ -89,18 +98,6 @@ public class Audiolist extends AppCompatActivity implements View.OnClickListener
 
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.video: {
-                Intent intent = new Intent(Audiolist.this, MovieList.class);
-                startActivity(intent);
 
-            }
-            case R.id.audio: {
-                Intent intent = new Intent(Audiolist.this, Audiolist.class);
-                startActivity(intent);
-            }
-        }
-    }
+
 }

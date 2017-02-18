@@ -39,7 +39,7 @@ public class Splash_Screen extends AppCompatActivity {
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             } finally {
-                                Intent intent = new Intent(Splash_Screen.this, MovieList.class);
+                                Intent intent = new Intent(Splash_Screen.this, MovieList .class);
                                 startActivity(intent);
                                 finish();
                             }

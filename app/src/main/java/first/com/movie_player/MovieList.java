@@ -1,32 +1,42 @@
 package first.com.movie_player;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-
-import com.mxn.soul.flowingdrawer_core.ElasticDrawer;
-import com.mxn.soul.flowingdrawer_core.FlowingDrawer;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieList extends AppCompatActivity implements View.OnClickListener {
+public class MovieList extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,SettingsFragment.SettingsFragmentCallbackListener {
+
+
+    public static int themeColor = Color.parseColor("#B24242");
+
     Cursor cursor;
     int count;
     private List<String> videos = new ArrayList<>();
     private List<String> location = new ArrayList<>();
     DBHandler db;
     private GridLayoutManager lLayout;
-    FlowingDrawer mDrawer;
-    Button video,audio;
+    DrawerLayout drawer;
+
+
+    NavigationView navigationView;
 
     public MovieList() {
 
@@ -36,28 +46,19 @@ public class MovieList extends AppCompatActivity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movielist);
-        mDrawer = (FlowingDrawer) findViewById(R.id.drawerlayout);
-        mDrawer.setTouchMode(ElasticDrawer.TOUCH_MODE_BEZEL);
-        mDrawer.setOnDrawerStateChangeListener(new ElasticDrawer.OnDrawerStateChangeListener() {
-            @Override
-            public void onDrawerStateChange(int oldState, int newState) {
-                if (newState == ElasticDrawer.STATE_CLOSED) {
-                    Log.i("MovieList", "Drawer STATE_CLOSED");
-                }
-            }
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-            @Override
-            public void onDrawerSlide(float openRatio, int offsetPixels) {
-                Log.i("MovieList", "openRatio=" + openRatio + " ,offsetPixels=" + offsetPixels);
-            }
-        });
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
 
 
-        video= (Button) findViewById(R.id.video);
-        audio= (Button) findViewById(R.id.audio);
-
-        video.setOnClickListener(this);
-        audio.setOnClickListener(this);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        if (navigationView != null) {
+            navigationView.setNavigationItemSelectedListener(this);
+        }
+        navigationView.setCheckedItem(R.id.video);
 
         db=new DBHandler(getApplicationContext());
         db.resetTable_Records();
@@ -68,6 +69,45 @@ public class MovieList extends AppCompatActivity implements View.OnClickListener
         initList();
 
 
+    }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.activity_home_drawer, menu);//Menu Resource, Menu
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settings:
+                Toast.makeText(getApplicationContext(), "settings Selected", Toast.LENGTH_LONG).show();
+                showFragment("settings");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+    @Override
+    public void onColorChanged() {
+        navigationView.setBackgroundColor(themeColor);
+        navigationView.setItemIconTintList(ColorStateList.valueOf(themeColor));
+
+    }
+
+    @Override
+    public void onAlbumArtBackgroundChangedVisibility(int visibility) {
+
+    }
+
+    @Override
+    public void onAboutClicked() {
     }
 
 
@@ -112,19 +152,62 @@ public class MovieList extends AppCompatActivity implements View.OnClickListener
 
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.video:{
-                Intent intent=new Intent(MovieList.this,MovieList.class);
-                startActivity(intent);
 
+    @Override
+    public boolean onNavigationItemSelected( MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.video) {
+            Intent intent=new Intent(MovieList.this,MovieList.class);
+            startActivity(intent);
+        } else if (id == R.id.audio) {
+            showFragment("audio");
+        } else if (id == R.id.settings) {
+            showFragment("settings");
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private void showFragment(String type) {
+
+        if (type == "settings") {
+            SettingsFragment newFragment = new SettingsFragment();
+            android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+            if (newFragment == null) {
+                newFragment = new SettingsFragment();
             }
-            case R.id.audio:{
-                Intent intent=new Intent(MovieList.this,Audiolist.class);
-                startActivity(intent);
+            fm.beginTransaction()
+                    .setCustomAnimations(R.anim.slide_left,
+                            R.anim.slide_right,
+                            R.anim.slide_left,
+                            R.anim.slide_right)
+                    .add(R.id.fragContainer, newFragment, "settings")
+                    .show(newFragment)
+                    .addToBackStack(null)
+                    .commitAllowingStateLoss();
+        }
+        else if(type=="audio"){
+
+            Audio newFragment = new Audio();
+            FragmentManager fm = getSupportFragmentManager();
+            if (newFragment == null) {
+                newFragment = new Audio();
             }
+            fm.beginTransaction()
+                    .setCustomAnimations(R.anim.slide_left,
+                            R.anim.slide_right,
+                            R.anim.slide_left,
+                            R.anim.slide_right)
+                    .add(R.id.fragContainer, newFragment, "Audio")
+                    .replace(R.id.fragContainer,newFragment)
+                    .addToBackStack(null)
+                    .commit();
+
 
         }
-    }
+     }
 }
+

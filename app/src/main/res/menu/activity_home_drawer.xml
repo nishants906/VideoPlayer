@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/video"
+            android:checked="true"
+            android:icon="@mipmap/ic_launcher"
+            android:title="VIDEO" />
+        <item
+            android:id="@+id/audio"
+            android:icon="@mipmap/ic_launcher"
+            android:title="AUDIO" />
+        <item
+            android:id="@+id/settings"
+            android:icon="@mipmap/ic_launcher"
+            android:title="Settings" />
+    </group>
+
+
+</menu>
