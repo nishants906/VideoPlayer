@@ -203,7 +203,6 @@ public class MovieList extends AppCompatActivity implements NavigationView.OnNav
                             R.anim.slide_right)
                     .add(R.id.fragContainer, newFragment, "Audio")
                     .replace(R.id.fragContainer,newFragment)
-                    .addToBackStack(null)
                     .commit();
 
 
